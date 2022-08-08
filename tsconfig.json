@@ -7,7 +7,7 @@
       "es6"
     ],
     "allowJs": true,
-    "outDir": "./dist",
+    "outDir": "build",
     "rootDir": "./src",
     "removeComments": true,
     "typeRoots": [
@@ -20,10 +20,19 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@controllers": ["./src/controllers"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@repositories": ["./src/repositories"],
+      "@repositories/*": ["./src/repositories/*"],
+      "@DTOs": ["./src/DTOs"],
+      "@database": ["./src/database"],
+      "@middlewares/*": ["./src/middlewares/*"]
+    }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
   ],
   "exclude": [
     "tests"
