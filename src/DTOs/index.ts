@@ -1,8 +1,13 @@
-import { UserSchema, UserSchemaUpdate, UserType, UserLoginSchema } from "./User";
+import { UserSchema, UserType, UserLoginSchema } from "./User";
+import { PostSchema, PostType } from "./Post";
+import { PunctuationSchema, PunctuationType } from "./Punctuation";
 
 export {
   UserSchema,
-  UserSchemaUpdate,
   UserType,
   UserLoginSchema,
-}
+  PostSchema,
+  PostType,
+  PunctuationSchema,
+  PunctuationType,
+};
