@@ -1,6 +1,7 @@
 import UserRepository from "./UserRepository";
 import PostRepository from "./PostRepository";
 import PunctuationRepository from "./PunctuationRepository";
+import CommentsRepository from "./CommentsRepository";
 
 interface QueryResponseUser {
   id: string;
@@ -27,21 +28,39 @@ interface PostsType {
   title: string;
   description: string;
   image: string;
+  username: string;
+  userImage: string;
   text: string;
   punctuations: PunctuationType[];
+  comments: CommentsType[];
 }
 
 interface QueryResponseAllPosts extends PostsType {
   serialId: number;
 }
 
+interface CommentsType {
+  id: string | number;
+  username: string;
+  image: string;
+  commentary: string;
+}
+
+interface QueryResponseComments extends CommentsType {
+  serialId: number;
+  userId: string;
+  postId: string;
+}
+
 export {
   UserRepository,
   PostRepository,
   PunctuationRepository,
+  CommentsRepository,
   PostsType,
   QueryResponseAllPosts,
   QueryResponseUser,
   PunctuationType,
   QueryResponseAllPunctuations,
-}
+  QueryResponseComments,
+};

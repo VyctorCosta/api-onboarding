@@ -2,7 +2,13 @@ import { client } from "@database";
 import { UserTypeJWT } from "@middlewares/validateToken";
 import { PostSchema } from "@DTOs";
 import { v4 as uuidv4 } from "uuid";
-import { PostsType, QueryResponseAllPosts, QueryResponseAllPunctuations } from "@repositories";
+import {
+  PostsType,
+  QueryResponseAllPosts,
+  QueryResponseAllPunctuations,
+  QueryResponseComments,
+  QueryResponseUser,
+} from "@repositories";
 
 class PostRepository {
   async getAllPosts(): Promise<{ status: number; data: PostsType[] | Error }> {
@@ -10,6 +16,9 @@ class PostRepository {
       const { rows: result } = await client.query<QueryResponseAllPosts>('SELECT * from "Posts"');
       const { rows: allPunctuations } = await client.query<QueryResponseAllPunctuations>(
         'SELECT * FROM "Punctuation"'
+      );
+      const { rows: allComments } = await client.query<QueryResponseComments>(
+        'SELECT * FROM "Comments"'
       );
 
       return {
@@ -23,6 +32,14 @@ class PostRepository {
               id: serialId,
               username,
               punctuation,
+            })),
+          comments: allComments
+            .filter(({ postId }) => postId === rest.id)
+            .map(({ serialId, username, image, commentary }) => ({
+              id: serialId,
+              username,
+              image,
+              commentary,
             })),
         })),
       };
@@ -45,10 +62,16 @@ class PostRepository {
         return { status: 400, data: new Error(error.message) };
       }
 
+      const { rows: [userDB]} = await client.query<QueryResponseUser>('SELECT name, image FROM "User" WHERE id=$1', [user.id]);
+      
+      if (!userDB) {
+        return { status: 400, data: new Error("User doesn't exists!") }
+      }
+
       const postId = uuidv4();
       await client.query(
-        'INSERT INTO "Posts" (id, title, description, image, text) VALUES ($1, $2, $3, $4, $5)',
-        [postId, title, description, image, text]
+        'INSERT INTO "Posts" (id, title, description, "postImage", username, "userImage", text) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [postId, title, description, image, userDB.name, userDB.image, text]
       );
 
       await client.query('INSERT INTO "PostUser" ("userId", "postId") VALUES ($1, $2)', [
@@ -64,7 +87,17 @@ class PostRepository {
 
       return {
         status: 201,
-        data: { id: serialId, title, description, image, text, punctuations: [] },
+        data: {
+          id: serialId,
+          title,
+          description,
+          image,
+          username: userDB.name,
+          userImage: userDB.image,
+          text,
+          punctuations: [],
+          comments: [],
+        },
       };
     } catch (error) {
       return { status: 400, data: new Error(error.message) };
@@ -80,6 +113,9 @@ class PostRepository {
       ]);
       const { rows: allPunctuations } = await client.query<QueryResponseAllPunctuations>(
         'SELECT * FROM "Punctuation"'
+      );
+      const { rows: allComments } = await client.query<QueryResponseComments>(
+        'SELECT * FROM "Comments"'
       );
 
       if (!result) {
@@ -99,6 +135,14 @@ class PostRepository {
               id: serialId,
               username,
               punctuation,
+            })),
+          comments: allComments
+            .filter(({ postId }) => postId === rest.id)
+            .map(({ serialId, username, image, commentary }) => ({
+              id: serialId,
+              username,
+              image,
+              commentary,
             })),
         },
       };

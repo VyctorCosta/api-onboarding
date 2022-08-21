@@ -22,7 +22,9 @@ CREATE TABLE "Posts" (
 	"serialId" serial,
 	"title" varchar(255) NOT NULL UNIQUE,
 	"description" TEXT NOT NULL,
-	"image" TEXT NOT NULL,
+	"postImage" TEXT NOT NULL,
+	"username" varchar(255) NOT NULL,
+	"userImage" TEXT NOT NULL,
 	"text" TEXT NOT NULL,
 	CONSTRAINT "Posts_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -36,7 +38,7 @@ CREATE TABLE "Comments" (
 	"image" varchar(255) NOT NULL ,
 	"userId" uuid NOT NULL ,
 	"postId" uuid NOT NULL ,
-	"comentary" TEXT NOT NULL,
+	"commentary" TEXT NOT NULL,
 	CONSTRAINT "Comments_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE

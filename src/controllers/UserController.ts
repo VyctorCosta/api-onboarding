@@ -13,7 +13,7 @@ class UserController {
         return res.status(status).json({ message: data.message });
       }
 
-      return res.status(status).json({ message: data });
+      return res.status(status).json(data);
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);

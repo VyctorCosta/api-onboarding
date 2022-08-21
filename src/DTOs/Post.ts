@@ -11,5 +11,7 @@ export type PostType = {
   title: string;
   description: string;
   image: string;
+  username: string;
+  userImage: string;
   text: string;
 }

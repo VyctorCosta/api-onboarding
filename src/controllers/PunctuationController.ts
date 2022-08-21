@@ -12,7 +12,7 @@ class Punctuation {
 
       return res.status(status).json(data);
     } catch (error) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message }); // Punctuation_fk0
     }
   }
 
